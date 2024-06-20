@@ -4,42 +4,16 @@
 
 
     <VideoScroller :scroll-position="scrollPosition" />
-    <!-- <div class="controls">
-      <button @click="scrollLeft">Left</button>
-      <button @click="scrollRight">Right</button>
-    </div> -->
-    <!-- <div class="temp">{{ scrollPosition }}</div> -->
+
 
   </div>
 </template>
 
 <script setup>
 
-import { ref } from 'vue';
 import VideoScroller from './components/VideoScroller.vue';
-// import SerialMonitor from './components/SerialMonitor.vue';
 import state from './store.js'
 
-// const scrollPosition = ref(0);
-
-// const scrollLeft = () => {
-//   if (scrollPosition.value > 0) {
-//     scrollPosition.value -= window.innerWidth;
-
-
-
-//   }
-// };
-
-// const scrollRight = () => {
-//   if (scrollPosition.value < window.innerWidth * 4) {
-//     scrollPosition.value += window.innerWidth;
-
-//     console.log('window.innerWidth', window.innerWidth);
-//     console.log('window.innerWidth', window.innerWidth);
-
-//   }
-// };
 </script>
 
 <style>
@@ -51,7 +25,8 @@ import state from './store.js'
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  padding: 0;
+  /* padding: 0 88px; */
+
 }
 
 .controls {
