@@ -1,5 +1,13 @@
 <template>
     <div>
+        <div class="cv">
+
+            <p class="">{{ state.currentValue }}</p>
+            <p class="">{{ scrollPosition }}</p>
+            <!-- <button class="plus" @click="state.currentValue -= 50">minus</button>
+<button class="plus" @click="state.currentValue += 50">plus</button> -->
+        </div>
+
         <div class="scroll-container">
             <div class="container" :style="{ transform: `translateX(${-scrollPosition}px)`, width: `${totalWidth}px` }">
                 <img :src="`/images/back_${scannerType}.jpg`" alt="" class="background">
@@ -14,13 +22,26 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import state from '../store.js';
 import scannerConfig from '@/assets/json/scannerConfig.json';
-// console.log(scannerConfig);
+
+
+// const encoderWidth = scannerConfig[scannerType].encoderWidth
+// const totalWidth = scannerConfig[scannerType].totalWidth
+// console.log('encoderWidth', encoderWidth);
+// encoderWidth = scannerConfig[scannerType].encoderWidth
+
 
 const scannerType = 'bronenosny';
 
+// console.log('scannerConfig[scannerType]', scannerConfig[scannerType]);
+// console.log('encoderWidth', scannerConfig[scannerType].encoderWidth);
+
+
+
+
 const scrollPosition = computed(() => {
-    console.log('totalWidth.value/10', Math.max(0, Math.min(state.currentValue * 10, totalWidth.value / 10)));
-    return Math.max(0, Math.min(state.currentValue * 10, totalWidth.value - 2160));
+    // console.log('totalWidth.value/10', Math.max(0, Math.min(state.totalWidth/state.encoderWidth, totalWidth.value - 2160)));
+    return calculateScrollPosition()
+    // return Math.max(0, Math.min(state.currentValue * state.totalWidth/state.encoderWidth, totalWidth.value - 2160));
 });
 
 const video = ref(null);
@@ -42,6 +63,16 @@ const loadConfig = (scannerType) => {
     videoSources.value = config.videos;
 };
 
+
+
+const mapValue = (value, inMin, inMax, outMin, outMax) => {
+    return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+};
+
+const calculateScrollPosition = () => {
+    console.log('encoderValue, 0, scannerConfig.encoderWidth, 0, scannerConfig.totalWidth - 2160', state.currentValue, 0, scannerConfig.encoderWidth, 0, scannerConfig.totalWidth - 2160);
+    return mapValue(state.currentValue, 0, scannerConfig[scannerType].encoderWidth, 0, scannerConfig[scannerType].totalWidth - 2160);
+};
 
 const onScroll = () => {
     const scrollContainer = document.querySelector('.scroll-container');
