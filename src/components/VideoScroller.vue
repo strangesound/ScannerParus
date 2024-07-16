@@ -1,12 +1,10 @@
 <template>
     <div>
-        <div class="cv">
+        <!-- <div class="cv">
 
             <p class="">{{ state.currentValue }}</p>
             <p class="">{{ Math.round(scrollPosition) }}</p>
-            <!-- <button class="plus" @click="state.currentValue -= 50">minus</button>
-<button class="plus" @click="state.currentValue += 50">plus</button> -->
-        </div>
+        </div> -->
 
         <div ref="scrollContainer" class="scroll-container">
             <div class="container" :style="{ transform: `translateX(${-scrollPosition}px)`, width: `${totalWidth}px` }">
@@ -25,7 +23,7 @@ import scannerConfig from '@/assets/json/scannerConfig.json';
 
 
 
-const scannerType = 'bronenosny';
+const scannerType = 'podvodny';
 
 // console.log('scannerConfig[scannerType]', scannerConfig[scannerType]);
 // console.log('encoderWidth', scannerConfig[scannerType].encoderWidth);
@@ -175,7 +173,7 @@ onMounted(() => {
         handleVideoChange(newIndex);
     });
 
-
+    handleVideoChange(calculateCurrentIndex())
 });
 
 
