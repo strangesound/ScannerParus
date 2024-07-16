@@ -25,7 +25,7 @@ import scannerConfig from '@/assets/json/scannerConfig.json';
 
 
 
-const scannerType = 'parusny';
+const scannerType = 'bronenosny';
 
 // console.log('scannerConfig[scannerType]', scannerConfig[scannerType]);
 // console.log('encoderWidth', scannerConfig[scannerType].encoderWidth);

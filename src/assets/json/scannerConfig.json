@@ -2,9 +2,9 @@
     "bronenosny": {
         "zoneWidth": 3145,
         "gap": 125,
-        "totalWidth": 16231,
+        "totalWidth": 16230,
         "encoderWidth": 9244,
-        "padding": 190,
+        "padding": 250,
         "videos": [
             "/videos/bronenosny_1.mp4",
             "/videos/bronenosny_2.mp4",
@@ -32,7 +32,7 @@
         "gap": 0,
         "totalWidth": 19427,
         "encoderWidth": 15235,
-        "padding": 88,
+        "padding": 250,
         "videos": [
             "/videos/podvod_1.mp4",
             "/videos/podvod_2.mp4",
