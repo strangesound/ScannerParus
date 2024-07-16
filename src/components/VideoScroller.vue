@@ -3,14 +3,14 @@
         <div class="cv">
 
             <p class="">{{ state.currentValue }}</p>
-            <p class="">{{ scrollPosition }}</p>
+            <p class="">{{ Math.round(scrollPosition) }}</p>
             <!-- <button class="plus" @click="state.currentValue -= 50">minus</button>
 <button class="plus" @click="state.currentValue += 50">plus</button> -->
         </div>
 
-        <div class="scroll-container">
+        <div ref="scrollContainer" class="scroll-container">
             <div class="container" :style="{ transform: `translateX(${-scrollPosition}px)`, width: `${totalWidth}px` }">
-                <img :src="`/images/back_${scannerType}.jpg`" alt="" class="background">
+                <!-- <img :src="`/images/back_${scannerType}.jpg`" alt="" class="background"> -->
                 <!-- :src="`back_${scannerType}.jpg`" -->
             </div>
         </div>
@@ -24,13 +24,8 @@ import state from '../store.js';
 import scannerConfig from '@/assets/json/scannerConfig.json';
 
 
-// const encoderWidth = scannerConfig[scannerType].encoderWidth
-// const totalWidth = scannerConfig[scannerType].totalWidth
-// console.log('encoderWidth', encoderWidth);
-// encoderWidth = scannerConfig[scannerType].encoderWidth
 
-
-const scannerType = 'bronenosny';
+const scannerType = 'parusny';
 
 // console.log('scannerConfig[scannerType]', scannerConfig[scannerType]);
 // console.log('encoderWidth', scannerConfig[scannerType].encoderWidth);
@@ -53,9 +48,12 @@ const gap = ref(0);
 const padding = ref(0);
 const totalWidth = ref(0);
 
+const scrollContainer = ref(null);
+const containerWidth = scrollContainer?.clientWidth;
+
+
 const loadConfig = (scannerType) => {
     const config = scannerConfig[scannerType];
-
     zoneWidth.value = config.zoneWidth;
     gap.value = config.gap;
     padding.value = config.padding;
@@ -63,63 +61,121 @@ const loadConfig = (scannerType) => {
     videoSources.value = config.videos;
 };
 
-
-
 const mapValue = (value, inMin, inMax, outMin, outMax) => {
     return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 };
 
 const calculateScrollPosition = () => {
-    console.log('encoderValue, 0, scannerConfig.encoderWidth, 0, scannerConfig.totalWidth - 2160', state.currentValue, 0, scannerConfig.encoderWidth, 0, scannerConfig.totalWidth - 2160);
     return mapValue(state.currentValue, 0, scannerConfig[scannerType].encoderWidth, 0, scannerConfig[scannerType].totalWidth - 2160);
 };
 
 const onScroll = () => {
-    const scrollContainer = document.querySelector('.scroll-container');
+    // const scrollLeft = scrollPosition.value;
+    // const paddingValue = padding.value;
+    // const zoneWidthValue = zoneWidth.value;
+    // const gapValue = gap.value;
+
+    // // Включаем паддинги в расчет начала и конца зон
+    // let adjustedScrollLeft = scrollLeft - paddingValue;
+    // let currentIndex;
+
+    // if (scannerType.value === 'bronenosny') {
+    //     // Учитываем gap после второй зоны
+    //     if (adjustedScrollLeft > (2 * zoneWidthValue + paddingValue)) {
+    //         adjustedScrollLeft -= gapValue;
+    //     }
+    //     currentIndex = Math.floor(adjustedScrollLeft / zoneWidthValue);
+    // } else {
+    //     currentIndex = Math.floor(adjustedScrollLeft / zoneWidthValue);
+    // }
+
+    // let startZone = (currentIndex * zoneWidthValue) + paddingValue;
+    // if (scannerType.value === 'bronenosny' && currentIndex >= 2) {
+    //     startZone += gapValue;
+    // }
+    // const endZone = startZone + zoneWidthValue;
+
+    // if (adjustedScrollLeft >= startZone && (adjustedScrollLeft + containerWidth) <= endZone) {
+    //     currentVideo.value = videoSources.value[currentIndex];
+    //     videoOpacity.value = 0;
+    //     // console.log('currentVideo.value', currentVideo.value, 'opacity 1');
+    // } else {
+    //     videoOpacity.value = 0;
+    //     // console.log('currentVideo.value', currentVideo.value, 'opacity 0');
+    // }
+    // calculateCurrentIndex()
+    // handleVideoChange()
+};
+
+
+const calculateCurrentIndex = () => {
     const scrollLeft = scrollPosition.value;
-    const containerWidth = scrollContainer.clientWidth;
     const paddingValue = padding.value;
     const zoneWidthValue = zoneWidth.value;
     const gapValue = gap.value;
 
-    // Включаем паддинги в расчет начала и конца зон
     let adjustedScrollLeft = scrollLeft - paddingValue;
     let currentIndex;
 
-    if (scannerType.value === 'bronenosny') {
-        // Учитываем gap после второй зоны
-        if (adjustedScrollLeft > (2 * zoneWidthValue + paddingValue)) {
-            adjustedScrollLeft -= gapValue;
-        }
-        currentIndex = Math.floor(adjustedScrollLeft / zoneWidthValue);
-    } else {
-        currentIndex = Math.floor(adjustedScrollLeft / zoneWidthValue);
-    }
+    currentIndex = Math.floor(adjustedScrollLeft / zoneWidthValue);
 
-    let startZone = (currentIndex * zoneWidthValue) + paddingValue;
-    if (scannerType.value === 'bronenosny' && currentIndex >= 2) {
-        startZone += gapValue;
-    }
+    console.log('currentIndex befor', currentIndex);
+    const startZone = currentIndex * zoneWidthValue + paddingValue;
     const endZone = startZone + zoneWidthValue;
+    const midZone = (startZone + endZone) / 2;
 
-    if (adjustedScrollLeft >= startZone && (adjustedScrollLeft + containerWidth) <= endZone) {
-        currentVideo.value = videoSources.value[currentIndex];
-        videoOpacity.value = 1;
-        console.log('currentVideo.value', currentVideo.value, 'opacity 1');
-    } else {
+    console.log(startZone, endZone, midZone);
+
+    if (adjustedScrollLeft > (currentIndex * zoneWidthValue + paddingValue + zoneWidthValue / 2)) {
+        currentIndex += 1;
+    }
+
+    if (currentIndex < 0) {
+        return 0
+    }
+    if (currentIndex > videoSources.value.length - 1) {
+        return videoSources.value.length - 1
+    }
+
+    return currentIndex;
+};
+
+
+
+const handleVideoChange = (newIndex) => {
+    if (currentVideo.value !== videoSources.value[newIndex]) {
         videoOpacity.value = 0;
-        console.log('currentVideo.value', currentVideo.value, 'opacity 0');
+        setTimeout(() => {
+            currentVideo.value = videoSources.value[newIndex];
+            videoOpacity.value = .5;
+        }, 500); // Должно совпадать с transition-duration в CSS
     }
 };
 
 
-// Следим за изменением scrollPosition и вызываем onScroll при изменениях
-watch(scrollPosition, () => {
-    onScroll();
-});
+
+
 
 onMounted(() => {
+
+
     loadConfig(scannerType);
+
+    console.log('loadConfig',
+        zoneWidth.value,
+        gap.value,
+        padding.value,
+        totalWidth.value,
+        videoSources.value
+    );
+
+
+    watch(scrollPosition, () => {
+        const newIndex = calculateCurrentIndex();
+        handleVideoChange(newIndex);
+    });
+
+
 });
 
 

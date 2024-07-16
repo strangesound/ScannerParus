@@ -31,14 +31,21 @@ import state from './store.js'
 .cv{
   position: absolute;
   left: 0;
-  top: 0;
+  bottom: 0;
   font-size: 5vw;
   z-index: 999;
   display: flex;
   flex-direction: column;
   background-color: bisque;
   opacity: .3;
+  margin: 0;
+  padding: 0;
 }
+
+.cv>p{
+  margin: 0;
+}
+
 .plus{
   font-size: 5vw;
 
@@ -67,10 +74,5 @@ button {
   z-index: 100;
 }
 
-.cv {
-  font-size: 10vw;
-  position: absolute;
-  top: 0;
-  z-index: 999;
-}
+
 </style>

@@ -16,9 +16,9 @@
     "parusny": {
         "zoneWidth": 3145,
         "gap": 0,
-        "totalWidth": 16231,
+        "totalWidth": 16230,
         "encoderWidth": 9244,
-        "padding": 88,
+        "padding": 250,
         "videos": [
             "/videos/parusny_1.mp4",
             "/videos/parusny_2.mp4",
