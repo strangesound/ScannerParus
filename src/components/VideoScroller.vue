@@ -147,7 +147,7 @@ const handleVideoChange = (newIndex) => {
         videoOpacity.value = 0;
         setTimeout(() => {
             currentVideo.value = videoSources.value[newIndex];
-            videoOpacity.value = .5;
+            videoOpacity.value = 1;
         }, 500); // Должно совпадать с transition-duration в CSS
     }
 };
