@@ -24,6 +24,8 @@ import state from './store.js'
   height: 3840px;
   width: 2160px;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
   /* padding: 0 88px; */
 
 }
