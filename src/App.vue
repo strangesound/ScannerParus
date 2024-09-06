@@ -5,13 +5,47 @@
     <VideoScroller :scroll-position="scrollPosition" />
 
 
+    <Transition>
+      <MoveScannerOverlay v-if="isActive" />
+    </Transition>
+
+
   </div>
 </template>
 
 <script setup>
+import { ref, watch } from 'vue';
 
 import VideoScroller from './components/VideoScroller.vue';
+import MoveScannerOverlay from './components/MoveScannerOverlay.vue';
 import state from './store.js'
+const isActive = ref(true);
+
+let timer = null;
+
+const resetTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+
+  isActive.value = false;
+
+  timer = setTimeout(() => {
+    isActive.value = true;
+  }, 2 * 60 * 1000);
+};
+
+watch(() => state.currentValue, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    resetTimer();
+  }
+});
+
+resetTimer();
+
+
+
+
 
 </script>
 
@@ -30,7 +64,7 @@ import state from './store.js'
 
 }
 
-.cv{
+.cv {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -44,11 +78,11 @@ import state from './store.js'
   padding: 0;
 }
 
-.cv>p{
+.cv>p {
   margin: 0;
 }
 
-.plus{
+.plus {
   font-size: 5vw;
 
 }
@@ -76,5 +110,14 @@ button {
   z-index: 100;
 }
 
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 1s ease;
+}
 
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 </style>
