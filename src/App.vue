@@ -32,7 +32,7 @@ const resetTimer = () => {
 
   timer = setTimeout(() => {
     isActive.value = true;
-  }, 2 * 60 * 1000);
+  }, 155000);
 };
 
 watch(() => state.currentValue, (newVal, oldVal) => {
